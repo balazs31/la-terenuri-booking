@@ -1,5 +1,8 @@
 import { createClient } from "@supabase/supabase-js";
 
+// Read before supabase-js consumes the URL hash: the app was opened from a password-reset e-mail.
+export const openedFromRecoveryLink = window.location.hash.includes("type=recovery");
+
 export const supabase = createClient(
   import.meta.env.VITE_SUPABASE_URL,
   import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
