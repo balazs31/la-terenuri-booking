@@ -174,3 +174,31 @@ button.link.danger { color: var(--bad); }
 .badge.simulated { color: var(--warn); }
 .badge.failed, .badge.uncertain { color: var(--bad); }
 .badge.cancelled { color: var(--muted); }
+
+.row.spread { justify-content: space-between; align-items: center; }
+h2.section { margin-top: 8px; padding-top: 16px; border-top: 1px solid var(--border); }
+
+.days { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; }
+.days li {
+  display: grid;
+  grid-template-columns: 9.5rem 1fr;
+  gap: 4px 12px;
+  align-items: center;
+  padding: 6px 0;
+  border-top: 1px solid var(--border);
+}
+.days li:first-child { border-top: none; }
+.days .day { font-variant-numeric: tabular-nums; }
+.days .hours { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+@media (max-width: 600px) {
+  .days li { grid-template-columns: 1fr; }
+}
+button.hour {
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  font-weight: 500;
+  padding: 3px 10px;
+  font-variant-numeric: tabular-nums;
+}
+button.hour.active { border-color: var(--accent); background: var(--accent); color: var(--accent-text); }

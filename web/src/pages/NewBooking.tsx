@@ -1,4 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
+import FreeSlots from "../components/FreeSlots";
 import { supabase } from "../lib/supabase";
 import { BOOKING_WINDOW_DAYS, COMPLEXES, FACILITIES, HOURS } from "../lib/catalog";
 import { addDays, bucharestDate, formatDate, hourLabel } from "../lib/time";
@@ -12,7 +13,9 @@ export default function NewBooking({ onCreated, onOpenSettings }: Props) {
   const [facilityId, setFacilityId] = useState(FACILITIES[0].id);
   const facility = FACILITIES.find((f) => f.id === facilityId)!;
   const complexes = COMPLEXES.filter((c) => facility.complexes.includes(c.id));
-  const [complexId, setComplexId] = useState(COMPLEXES[0].id);
+  const [chosenComplexId, setComplexId] = useState(COMPLEXES[0].id);
+  // Keep the location valid when the sport changes (e.g. squash is only at La Terenuri).
+  const complex = complexes.find((c) => c.id === chosenComplexId) ?? complexes[0];
   // Default: the day that opens at the next midnight.
   const [date, setDate] = useState(bucharestDate(BOOKING_WINDOW_DAYS + 1));
   const [from, setFrom] = useState(18);
@@ -27,10 +30,6 @@ export default function NewBooking({ onCreated, onOpenSettings }: Props) {
       .then(({ data }) => setLoginOk(!!data?.verified_at));
   }, []);
 
-  useEffect(() => {
-    if (!facility.complexes.includes(complexId)) setComplexId(facility.complexes[0]);
-  }, [facility, complexId]);
-
   const today = bucharestDate();
   const releaseDate = date ? addDays(date, -BOOKING_WINDOW_DAYS) : "";
   const alreadyOpen = releaseDate <= today;
@@ -41,7 +40,6 @@ export default function NewBooking({ onCreated, onOpenSettings }: Props) {
     if (!date || date < today) return setError("Pick today or a later day.");
     if (to < from) return setError("The window's end can't be before its start.");
     setBusy(true);
-    const complex = COMPLEXES.find((c) => c.id === complexId)!;
     const { error } = await supabase.from("booking_jobs").insert({
       complex_id: complex.id,
       complex_name: complex.name,
@@ -77,12 +75,16 @@ export default function NewBooking({ onCreated, onOpenSettings }: Props) {
         </label>
         <label>
           Location
-          <select value={complexId} onChange={(e) => setComplexId(e.target.value)}>
+          <select value={complex.id} onChange={(e) => setComplexId(e.target.value)}>
             {complexes.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
         </label>
       </div>
 
+      <FreeSlots facility={facility} complex={complex} />
+
+      <h2 className="section">Schedule the bot</h2>
+      <p className="muted small">For a day that isn’t open yet, or a full day you want watched.</p>
       <div className="grid3">
         <label>
           Day

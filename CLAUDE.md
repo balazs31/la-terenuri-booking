@@ -17,9 +17,10 @@ Sibling project with the same architecture: `../programari-bistrita`.
 
 - Every schema change is a new file in `supabase/migrations/` (timestamp prefix) **and** is applied with `apply_migration`
   under the same name. Never edit an applied migration.
-- Deploying a function: include `_shared/terenuri.ts` and `_shared/store.ts`, entrypoint `<name>/index.ts`.
-  `run-bookings`: `verify_jwt` **false** (authenticated via `x-cron-secret` checked against Vault).
-  `terenuri-check`: `verify_jwt` true (called from the browser).
+- Deploying a function: include `_shared/terenuri.ts`, `_shared/store.ts` (and `_shared/http.ts` for browser-called ones),
+  entrypoint `<name>/index.ts`. `run-bookings`: `verify_jwt` **false** (authenticated via `x-cron-secret` checked against Vault).
+  `terenuri-check` (login test) and `terenuri-direct` (free hours of open days + book now): `verify_jwt` true.
+- The site returns no free hours for days in a week where the user already has a booking for that sport.
 - RLS: own rows (`user_id = auth.uid()`). The browser may only insert jobs and set `status = 'cancelled'` on pending ones;
   results are written by `run-bookings` with the service role. The La Terenuri password is only written via
   `set_terenuri_credentials()` (Vault) and read by `get_terenuri_credentials()` (service role). `terenuri_sessions` has no

@@ -15,6 +15,7 @@ web (React, localhost:5180)  ──supabase-js──▶  Supabase project la-ter
                                                 ├─ tables: booking_jobs, terenuri_accounts (+ Vault password),
                                                 │          notification_recipients, terenuri_sessions (service role only)
                                                 ├─ edge fn terenuri-check   ← Settings "Save & test"
+                                                ├─ edge fn terenuri-direct  ← New booking: free hours of open days, book now
                                                 └─ pg_cron (every minute, only while a job is in its window)
                                                       └─▶ edge fn run-bookings
                                                             ├─ La Terenuri login (cached session, refreshed)
@@ -43,7 +44,12 @@ First time:
 
 ## Using it
 
-**New booking** → sport, location, day, From/To start hours → *Schedule booking*.
+**New booking** → pick sport and location. *Free now* lists the free hours of every day that's already open (today … today + 14);
+click an hour → *Book … now* books it immediately (saved under Bookings, WhatsApp with the invite link). Days in a week where you
+already have a booking for that sport show no hours (the site hides them).
+
+**Schedule the bot** (same page) for a day that isn't open yet, or a full day you want watched → Day, From/To start hours →
+*Schedule booking*.
 
 - A day that opens later: the job starts 2 minutes before 00:00 on day − 14 and watches until 03:30 (it also polls fast
   around 00:00 UTC in case the server counts days in UTC; to be confirmed, see below).
@@ -71,6 +77,7 @@ supabase link --project-ref vaptvjibyittxyydyrwf
 supabase db push
 supabase functions deploy run-bookings --no-verify-jwt
 supabase functions deploy terenuri-check
+supabase functions deploy terenuri-direct
 ```
 
 Vault secrets used by the cron job (already created): `project_url`, `cron_secret`.
