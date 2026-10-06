@@ -81,3 +81,16 @@ supabase functions deploy terenuri-direct
 ```
 
 Vault secrets used by the cron job (already created): `project_url`, `cron_secret`.
+
+## Deploying the web app
+
+Vercel project `la-terenuri-booker` (scope kendibalazs41-4188's projects, linked from `web/`), live at
+https://la-terenuri-booker.vercel.app. `VITE_SUPABASE_URL` / `VITE_SUPABASE_PUBLISHABLE_KEY` are set for all environments.
+Not connected to GitHub yet, so deploy from `web/`:
+
+```bash
+cd web && npx vercel deploy --prod
+```
+
+Supabase → Authentication → URL Configuration: set *Site URL* to `https://la-terenuri-booker.vercel.app` and add it plus
+`http://localhost:5180` to *Redirect URLs*, so confirmation / password e-mails link back to the app.
