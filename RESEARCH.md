@@ -66,5 +66,7 @@ Full list: Supabase RPC `get_facilities_with_complexes`, tables `sports_complexe
 - Competition is high: the newest day (Oct 20) was almost fully booked hours after opening.
 
 ## Open questions
-- Exact release moment of the new day (assumed 00:00 Europe/Bucharest) and whether the server enforces the 14-day window → verify by polling the slots endpoint around midnight.
+- Exact release moment of the new day and whether the server enforces the 14-day window. **Not** 00:00 Bucharest nor
+  00:00 UTC: 2026-10-21 had no free hour from 00:00 to 03:30 Bucharest on 10-07 (816 checks), but 9 free hours at 20:42.
+  `run-bookings` now watches the whole release day and logs the slot shape (`slots: …`) whenever it changes.
 - Session lifetime / refresh: use Supabase refresh token to keep the bot logged in.

@@ -109,7 +109,7 @@ export default function NewBooking({ onCreated, onOpenSettings }: Props) {
           {alreadyOpen
             ? `${formatDate(date)} is already open on the site: the bot tries right away (for 10 minutes).`
             : `${formatDate(date)} opens at ${formatDate(releaseDate)} 00:00 (Romanian time). The bot logs in 2 minutes
-               earlier, polls every second around the opening and keeps watching until 03:30.`}{" "}
+               earlier, polls every second around the opening and keeps watching until the end of that day.`}{" "}
           Books the earliest free hour from {hourLabel(from)} to {hourLabel(to)}; if none is free, the free hour closest to
           that window on the same day (the later one on a tie). The site allows one booking per sport per week
           {facility.minPeople > 1 && `, and ${facility.name.toLowerCase()} needs ${facility.minPeople - 1} more player(s) to confirm within 2 hours`}.

@@ -32,7 +32,8 @@ Sibling project with the same architecture: `../programari-bistrita`.
 ## Booking engine (`supabase/functions/run-bookings`)
 
 - Trigger `booking_jobs_set_window`: `release_at` = (target − 14 d) 00:00 Bucharest; watch window release − 2 min →
-  release + 3 h 30 min, or now → now + 10 min if the day is already open.
+  end of the release day (Bucharest), or now → now + 10 min if the day is already open. 21.10.2026 wasn't open at 03:30
+  but was by 20:42: the real opening moment is unknown; each run logs `slots: …` (day's slot shape) when it changes.
 - pg_cron ticks every minute and calls the function only while a pending job is in its window.
   `claim_booking_jobs(200)` leases jobs. A run lasts ~55 s, extended up to 100 s (leaves room for a POST under the 150 s
   wall clock) when 00:00 Bucharest or 00:00 UTC of the release day is near, polling every 1 s from −15 s to +120 s around

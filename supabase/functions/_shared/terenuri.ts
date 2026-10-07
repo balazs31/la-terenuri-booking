@@ -119,6 +119,14 @@ export function freeHours(slots: TimeSlot[], date: string, now = new Date()): nu
     .sort((a, b) => a - b);
 }
 
+/** How the site shows the day, e.g. "13 slots (13 returned), 13 blocked, 0 with a court": to learn what an opening looks like. */
+export function describeSlots(slots: TimeSlot[], date: string): string {
+  const day = slots.filter((t) => t.slot.startsWith(date));
+  const blocked = day.filter((t) => t.is_Blocked).length;
+  const withCourt = day.filter((t) => t.courtId).length;
+  return `${day.length} slots (${slots.length} returned), ${blocked} blocked, ${withCourt} with a court`;
+}
+
 /**
  * Earliest free hour inside [from, to]; otherwise the free hour closest to the window,
  * the later one on a tie. Null if nothing is free.

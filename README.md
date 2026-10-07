@@ -51,8 +51,8 @@ already have a booking for that sport show no hours (the site hides them).
 **Schedule the bot** (same page) for a day that isn't open yet, or a full day you want watched → Day, From/To start hours →
 *Schedule booking*.
 
-- A day that opens later: the job starts 2 minutes before 00:00 on day − 14 and watches until 03:30 (it also polls fast
-  around 00:00 UTC in case the server counts days in UTC; to be confirmed, see below).
+- A day that opens later: the job starts 2 minutes before 00:00 on day − 14 and watches until the end of that day (it polls
+  fast around 00:00 Bucharest and 00:00 UTC, every 20 s otherwise: days were seen opening later than both; see below).
 - A day that's already open: it tries right away, for 10 minutes.
 - *Dry run*: does everything except the booking POST and reports the hour it would have taken. Use it to watch an opening.
 

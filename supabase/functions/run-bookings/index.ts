@@ -7,6 +7,7 @@ import {
   addDays,
   book,
   chooseHour,
+  describeSlots,
   freeHours,
   getSlots,
   inviteUrl,
@@ -93,6 +94,7 @@ async function runJob(job: Job, t0: number) {
   let postsThisRun = 0;
   const refusals = new Set<string>();
   let lastMessage = "No free hour yet";
+  let lastShape = "";
   const save = (fields: Record<string, unknown>) =>
     finish(job.id, { attempts: job.attempts + attempts, booking_attempts: posts, ...fields });
   const fail = async (message: string) => {
@@ -126,7 +128,11 @@ async function runJob(job: Job, t0: number) {
       attempts++;
       let free: number[] = [];
       try {
-        free = freeHours(await getSlots(s, job.complex_id, job.facility_id, job.target_date), job.target_date);
+        const slots = await getSlots(s, job.complex_id, job.facility_id, job.target_date);
+        const shape = describeSlots(slots, job.target_date);
+        if (shape !== lastShape) console.log(`[${job.id}] slots: ${shape}`);
+        lastShape = shape;
+        free = freeHours(slots, job.target_date);
       } catch (e) {
         lastMessage = String(e);
       }
